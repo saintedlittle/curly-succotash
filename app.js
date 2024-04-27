@@ -1,33 +1,20 @@
-const http = require("http");
+const express = require("express");
+const mainRoute = require("./routes/main");
+const gamesRouter = require("./routes/games");
 const path = require("path");
-const mimeTypes = require("./appModules/http-utils/mime-types");
-const mainRouteController = require("./controllers/main");
-const defaultRouteController = require("./controllers/default");
-const gameRouteController = require("./controllers/game");
-const voteRouteController = require("./controllers/vote");
+const bodyParser = require("body-parser");
+const app = express();
+const port = 3000;
+const cors = require("./middlewars/games");
 
-const server = http.createServer((req, res) => {
-  const url = req.url;
+app.use(
+    cors,
+    bodyParser.json(),
+    express.static(path.join(__dirname, "public")),
+    mainRoute,
+    gamesRouter
+);
 
-  switch (url) {
-    case "/":
-      mainRouteController(res, "/index.html", ".html");
-      break;
-    case "/game":
-      gameRouteController(res);
-      break;
-    case "/vote":
-      voteRouteController(req, res);
-      break;
-    default:
-      const extname = String(path.extname(url)).toLowerCase();
-      if (extname in mimeTypes) {
-        defaultRouteController(res, url);
-      } else {
-        res.statusCode = 404;
-        res.end("Not Found");
-      }
-  }
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
 });
-
-server.listen(3005);
