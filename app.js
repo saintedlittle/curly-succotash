@@ -5,16 +5,16 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const cors = require("./middlewars/games");
+const cors = require("./middlewares/cors");
 
 app.use(
-    cors,
-    bodyParser.json(),
-    express.static(path.join(__dirname, "public")),
-    mainRoute,
-    gamesRouter
+  cors,
+  bodyParser.json(),
+  express.static(path.join(__dirname, "public")),
+  mainRoute,
+  gamesRouter
 );
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
